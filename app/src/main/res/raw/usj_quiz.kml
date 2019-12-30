@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>USJ-Android</name>
+	<gx:CascadingStyle kml:id="__managed_style_0DE96D30181076E4FB35">
+		<Style>
+			<IconStyle>
+				<scale>1.2</scale>
+				<Icon>
+					<href>https://earth.google.com/earth/rpc/cc/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>6</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+				<displayMode>hide</displayMode>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_111949AE191076E4FB34">
+		<Style>
+			<IconStyle>
+				<Icon>
+					<href>https://earth.google.com/earth/rpc/cc/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+				<displayMode>hide</displayMode>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<StyleMap id="__managed_style_097A0454181076E4FB34">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#__managed_style_111949AE191076E4FB34</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#__managed_style_0DE96D30181076E4FB35</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Placemark id="0287A85ABE1076E4FB33">
+		<name>Facultad de Salud</name>
+		<LookAt>
+			<longitude>-0.8311914817436594</longitude>
+			<latitude>41.7576217946701</latitude>
+			<altitude>248.9745982240852</altitude>
+			<heading>359.6528815088498</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>349.2145254385105</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_097A0454181076E4FB34</styleUrl>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						-0.8311091893729516,41.75753164624877,248.3493528883256 -0.8314367492257135,41.7578231136775,249.8524432627462 -0.8319470995348166,41.75760226895051,252.9694620983884 -0.832057152868303,41.75766325512706,253.118912796783 -0.8321304677239894,41.75755463044437,253.2534172185016 -0.8324055654159856,41.75743318068063,252.8313150405081 -0.8322744480964939,41.7572785645367,252.9095831891783 -0.8321282460722568,41.75730889983001,253.3352694623535 -0.8317410220091725,41.75686250721159,250.402450449874 -0.8315769748956892,41.75691336300302,248.9192086817625 -0.8314423614699928,41.75708787847969,250.2598974384346 -0.8315880238449147,41.75722779191073,251.8895195647886 -0.8311091893729516,41.75753164624877,248.3493528883256 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark id="0C8DD510561076E5FCC8">
+		<name>Facultad de Tecnología</name>
+		<LookAt>
+			<longitude>-0.8317776677154121</longitude>
+			<latitude>41.7568256992704</latitude>
+			<altitude>250.7082975538583</altitude>
+			<heading>359.6528812338752</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>347.4808410063997</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_097A0454181076E4FB34</styleUrl>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						-0.8325996987964268,41.75719559750937,252.7845959786594 -0.8327860910429241,41.75679033428088,252.3941419072167 -0.8324817889688652,41.75669209661449,252.7341822753445 -0.8322413751928481,41.75708880231682,252.777290182617 -0.8325996987964268,41.75719559750937,252.7845959786594 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark id="024AFF19AF1076E6A03B">
+		<name>Facultad de Comunicación</name>
+		<LookAt>
+			<longitude>-0.8317776677154121</longitude>
+			<latitude>41.7568256992704</latitude>
+			<altitude>250.7082975538583</altitude>
+			<heading>359.6528812338752</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>347.4808410063997</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_097A0454181076E4FB34</styleUrl>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						-0.8324420708569658,41.75656602528644,252.4253014946507 -0.8328208962233119,41.756230551752,251.0781899824424 -0.8325542650979934,41.75603293614586,247.7812316858275 -0.8324458198242823,41.75607937390278,248.4204485503453 -0.8323581760256837,41.75616676898713,248.9253794219305 -0.8322789168795774,41.75623273033486,249.1719143771952 -0.8321638732282122,41.75632294040624,249.772571253625 -0.8321203469891691,41.75641856500249,250.495166146586 -0.8324420708569658,41.75656602528644,252.4253014946507 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+</Document>
+</kml>
