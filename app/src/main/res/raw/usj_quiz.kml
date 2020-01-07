@@ -18,7 +18,7 @@
 				<width>6</width>
 			</LineStyle>
 			<PolyStyle>
-				<color>40ffffff</color>
+				<color>ff007cf5</color>
 			</PolyStyle>
 			<BalloonStyle>
 				<displayMode>hide</displayMode>
@@ -40,7 +40,7 @@
 				<width>4</width>
 			</LineStyle>
 			<PolyStyle>
-				<color>40ffffff</color>
+				<color>ff007cf5</color>
 			</PolyStyle>
 			<BalloonStyle>
 				<displayMode>hide</displayMode>

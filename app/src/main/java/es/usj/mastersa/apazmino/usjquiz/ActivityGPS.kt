@@ -14,24 +14,15 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 
-
-
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.data.kml.KmlLayer
-import com.google.android.gms.maps.CameraUpdate
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.single.PermissionListener
-
-
-import org.xmlpull.v1.XmlPullParserException
-
 
 class ActivityGPS : AppCompatActivity(), OnMapReadyCallback, PermissionListener {
 
@@ -43,6 +34,8 @@ class ActivityGPS : AppCompatActivity(), OnMapReadyCallback, PermissionListener 
 
     private lateinit var mMap: GoogleMap
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private var layer: KmlLayer? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,20 +47,20 @@ class ActivityGPS : AppCompatActivity(), OnMapReadyCallback, PermissionListener 
         mapFragment.getMapAsync(this)
         //To fetch the user´s current location or last known location
         fusedLocationProviderClient = FusedLocationProviderClient(this)
+        getCurrentLocation()
 
-        addLayer()
     }
 
     fun addLayer(){
-        val layer = KmlLayer(mMap, R.raw.etxe_project, applicationContext)
-        layer.addLayerToMap()
-
+        layer = KmlLayer(mMap, R.raw.etxe_project, this)
+        layer!!.addLayerToMap()
+        //val container = layer!!.containers.iterator().next()
     }
 
 
     //To make the activity know, when the map is ready
     override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap?: return
+        mMap = googleMap
         if (isPermissionGiven()) {
             googleMap.isMyLocationEnabled = true
             googleMap.uiSettings.isMyLocationButtonEnabled = true
@@ -76,12 +69,12 @@ class ActivityGPS : AppCompatActivity(), OnMapReadyCallback, PermissionListener 
         } else {
             givePermission()
         }
+        addLayer()
 
         // Add a marker in Sydney and move the camera
         /*val usj = LatLng(41.756747, -0.832058)
         mMap.addMarker(MarkerOptions().position(usj).title("Marker in USJ"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(usj))*/
-
     }
 
     private fun isPermissionGiven(): Boolean {
@@ -106,8 +99,8 @@ class ActivityGPS : AppCompatActivity(), OnMapReadyCallback, PermissionListener 
         result.addOnCompleteListener {task ->
             try {
                 val response = task.getResult(ApiException::class.java)
-                //if (response!!.locationSettingsStates.isLocationPresent) {
-                //}
+                if (response!!.locationSettingsStates.isLocationPresent) {
+                }
             }catch (exception: ApiException) {
                 LocationSettingsStatusCodes.RESOLUTION_REQUIRED
                 try {
@@ -133,7 +126,6 @@ class ActivityGPS : AppCompatActivity(), OnMapReadyCallback, PermissionListener 
     }
 
     override fun onPermissionGranted(response: PermissionGrantedResponse?) {
-
     }
 
     override fun onPermissionRationaleShouldBeShown(
@@ -143,7 +135,5 @@ class ActivityGPS : AppCompatActivity(), OnMapReadyCallback, PermissionListener 
     }
     override fun onPermissionDenied(response: PermissionDeniedResponse?) {
     }
-
-
 }
 

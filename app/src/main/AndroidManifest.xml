@@ -31,8 +31,17 @@
             android:value="@string/google_maps_key" />
 
         <activity
+            android:name=".Activity2GPS"
+            android:label="@string/title_activity_activity2_gps">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".ActivityGPS"
-            android:label="title_activity_gps">
+            android:label="ActivityGPS">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
