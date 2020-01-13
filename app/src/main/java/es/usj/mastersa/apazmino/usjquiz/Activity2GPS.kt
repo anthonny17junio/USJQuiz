@@ -24,29 +24,33 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
+import com.google.gson.Gson
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import es.usj.mastersa.apazmino.usjquiz.clases.Quiz
+import java.io.IOException
+import java.io.InputStream
 
 class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationListener,
     GeoQueryEventListener {
 
-    private  var mMap: GoogleMap? = null
+    private var mMap: GoogleMap? = null
     private lateinit var locationRequest: LocationRequest
     private var locationCallback: LocationCallback? = null
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private  var currentMarker: Marker? = null
+    private var currentMarker: Marker? = null
     private lateinit var myLocationRef: DatabaseReference
     private lateinit var quizzArea: MutableList<LatLng>
     private lateinit var listener: IOnLoadLocationListener
 
     private lateinit var myCity: DatabaseReference
     private lateinit var lastLocation: Location
-    private  var geoQuery: GeoQuery? = null
-    private lateinit var  geoFire: GeoFire
+    private var geoQuery: GeoQuery? = null
+    private lateinit var geoFire: GeoFire
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +62,8 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
                 override fun onPermissionGranted(response: PermissionGrantedResponse?) {
                     buildLocationRequest()
                     buildLocationCallBack()
-                    fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this@Activity2GPS)
+                    fusedLocationProviderClient =
+                        LocationServices.getFusedLocationProviderClient(this@Activity2GPS)
                     initArea()
                     settingGeoFire()
 
@@ -73,11 +78,31 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
                 }
 
                 override fun onPermissionDenied(response: PermissionDeniedResponse?) {
-                    Toast.makeText(this@Activity2GPS, "You must enable this permission", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@Activity2GPS,
+                        "You must enable this permission",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
 
             }).check()
+//        cargarCuestionario(2)
     }
+
+//    private fun cargarCuestionario(id: Int) {
+//        var json : String ?= null
+//        try {
+//            val inputStream: InputStream = assets.open("quiz.json")
+//            json = inputStream.bufferedReader().use { it.readText() }
+//            val gson = Gson()
+//            val quiz = gson.fromJson(json, Quiz::class.java)
+//            val zona = quiz.getZona(id)
+//            Toast.makeText(this, gson.toJson(zona), Toast.LENGTH_LONG).show()
+//        }catch (e:IOException){
+//            Toast.makeText(this, "Error al cargar el JSON", Toast.LENGTH_LONG).show()
+//        }
+//
+//    }
 
     private fun addQuizzesToFirebase() {
         quizzArea = ArrayList()
@@ -86,17 +111,18 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
         //USJ
         quizzArea.add(LatLng(41.757400, -0.831999))
         quizzArea.add(LatLng(41.756963, -0.832471))
-        quizzArea.add(LatLng(41.756308 , -0.832450))
+        quizzArea.add(LatLng(41.756308, -0.832450))
 
         //Submit this list to Firebase
         FirebaseDatabase.getInstance().getReference("usjquiz").child("Mycity").setValue(quizzArea)
-            .addOnCompleteListener(object: OnCompleteListener<Void> {
+            .addOnCompleteListener(object : OnCompleteListener<Void> {
                 override fun onComplete(p0: Task<Void>) {
-                    Toast.makeText(this@Activity2GPS,"Updated", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this@Activity2GPS,"Updated", Toast.LENGTH_SHORT).show()
                 }
 
 
-            }).addOnFailureListener { _ -> Toast.makeText(this@Activity2GPS,"Fail", Toast.LENGTH_SHORT).show()
+            }).addOnFailureListener { _ ->
+                Toast.makeText(this@Activity2GPS, "Fail", Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -141,13 +167,23 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
     }
 
     private fun addUserMarker() {
-        geoFire.setLocation("You", GeoLocation(lastLocation.latitude, lastLocation.longitude)) {_,_->
+        geoFire.setLocation(
+            "You",
+            GeoLocation(lastLocation.latitude, lastLocation.longitude)
+        ) { _, _ ->
             if (currentMarker != null) {
                 currentMarker!!.remove()
             }
-            currentMarker = mMap!!.addMarker(MarkerOptions().position(LatLng(lastLocation.latitude, lastLocation.longitude)).title("You"))
+            currentMarker = mMap!!.addMarker(
+                MarkerOptions().position(
+                    LatLng(
+                        lastLocation.latitude,
+                        lastLocation.longitude
+                    )
+                ).title("You")
+            )
             //After add marker, move camera
-            mMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(currentMarker!!.position,18.0f))
+            mMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(currentMarker!!.position, 18.0f))
         }
     }
 
@@ -164,7 +200,11 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
         mMap = googleMap
 
         mMap!!.uiSettings.isZoomControlsEnabled = true
-        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback!!, Looper.myLooper())
+        fusedLocationProviderClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback!!,
+            Looper.myLooper()
+        )
         addCircleArea()
     }
 
@@ -181,7 +221,7 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
         mapFragment.getMapAsync(this)
 
         //Clear map and add data again
-        if (mMap != null){
+        if (mMap != null) {
             mMap!!.clear()
             //Add again user marker
             addUserMarker()
@@ -191,7 +231,7 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
     }
 
     private fun addCircleArea() {
-        if (geoQuery != null){
+        if (geoQuery != null) {
             //Remove old listener, image if you remove a location in Firebase
             //It must be removed the listener in GeoFire too
             geoQuery!!.removeGeoQueryEventListener(this@Activity2GPS)
@@ -199,10 +239,15 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
         }
         //Add again
         for (latLng in quizzArea) {
-            mMap!!.addCircle(CircleOptions().center(latLng).radius(20.0).strokeColor(Color.BLUE) //Radius in m
-                .fillColor(0x220000FF).strokeWidth(5.0f))
+            mMap!!.addCircle(
+                CircleOptions().center(latLng).radius(20.0).strokeColor(Color.BLUE) //Radius in m
+                    .fillColor(0x220000FF).strokeWidth(5.0f)
+            )
             //Create GeoQuery when user in quizz location
-            geoQuery = geoFire.queryAtLocation(GeoLocation(latLng.latitude, latLng.longitude), 0.2) // 0.5 = 500m
+            geoQuery = geoFire.queryAtLocation(
+                GeoLocation(latLng.latitude, latLng.longitude),
+                0.2
+            ) // 0.5 = 500m
             geoQuery!!.addGeoQueryEventListener(this@Activity2GPS)
         }
     }
@@ -216,7 +261,30 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
     }
 
     override fun onKeyEntered(key: String?, location: GeoLocation?) {
-        Toast.makeText(this, "You entered a quizz building, prepare for the question", Toast.LENGTH_SHORT).show()
+        var count = 0
+        var idMenor = 0
+        var distanciaMenor: Double = 0.0
+        quizzArea.forEach {
+            if (count == 0) {
+                distanciaMenor = coordinateDistance(location!!, it)
+            } else {
+                val distancia = coordinateDistance(location!!, it)
+                if (distancia < distanciaMenor) {
+                    distanciaMenor = distancia
+                    idMenor = count
+                }
+            }
+            count++
+        }
+        Toast.makeText(
+            this,
+            "Entraste a la zona " + idMenor,
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    fun coordinateDistance(ubucation: GeoLocation, area: LatLng): Double {
+        return 1.0
     }
 
     override fun onKeyMoved(key: String?, location: GeoLocation?) {

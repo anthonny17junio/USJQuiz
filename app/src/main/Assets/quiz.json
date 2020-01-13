@@ -1,0 +1,102 @@
+{
+  "zonas": [
+    {
+      "id": 0,
+      "nombre": "Rectorado",
+      "descripcion": "Descripción del edificio de rectorado",
+      "preguntas": [
+        {
+          "pregunta": "¿Cuánto es 2 + 3?",
+          "respuestas": [
+            {
+              "respuesta": "4",
+              "correcto": false
+            },
+            {
+              "respuesta": "1",
+              "correcto": false
+            },
+            {
+              "respuesta": "5",
+              "correcto": true
+            },
+            {
+              "respuesta": "7",
+              "correcto": false
+            }
+          ]
+        },
+        {
+          "pregunta": "¿Cuánto es 2 * 3?",
+          "respuestas": [
+            {
+              "respuesta": "6",
+              "correcto": true
+            },
+            {
+              "respuesta": "1",
+              "correcto": false
+            },
+            {
+              "respuesta": "5",
+              "correcto": false
+            },
+            {
+              "respuesta": "7",
+              "correcto": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "nombre": "Casa",
+      "descripcion": "Descripción de mi casa",
+      "preguntas": [
+        {
+          "pregunta": "¿Cuánto es 5 - 2? en casa",
+          "respuestas": [
+            {
+              "respuesta": "4",
+              "correcto": false
+            },
+            {
+              "respuesta": "1",
+              "correcto": false
+            },
+            {
+              "respuesta": "5",
+              "correcto": false
+            },
+            {
+              "respuesta": "3",
+              "correcto": true
+            }
+          ]
+        },
+        {
+          "pregunta": "¿Cuánto es 10 / 2? en casa",
+          "respuestas": [
+            {
+              "respuesta": "6",
+              "correcto": false
+            },
+            {
+              "respuesta": "1",
+              "correcto": false
+            },
+            {
+              "respuesta": "5",
+              "correcto": true
+            },
+            {
+              "respuesta": "7",
+              "correcto": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
