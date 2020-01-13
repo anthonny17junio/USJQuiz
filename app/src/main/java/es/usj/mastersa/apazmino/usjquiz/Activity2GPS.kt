@@ -213,8 +213,8 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
         }
         //Add again
         for (latLng in quizzArea) {
-            mMap!!.addCircle(CircleOptions().center(latLng).radius(20.0).strokeColor(Color.BLUE) //Radius in m
-                .fillColor(0x220000FF).strokeWidth(5.0f))
+            //mMap!!.addCircle(CircleOptions().center(latLng).radius(20.0).strokeColor(Color.BLUE) //Radius in m
+                //.fillColor(0x220000FF).strokeWidth(5.0f))
             //Create GeoQuery when user in quizz location
             geoQuery = geoFire.queryAtLocation(GeoLocation(latLng.latitude, latLng.longitude), 0.02) // 0.02 = 20m
             geoQuery!!.addGeoQueryEventListener(this@Activity2GPS)
