@@ -1,7 +1,9 @@
 package es.usj.mastersa.apazmino.usjquiz
 
 import android.Manifest
+import android.content.IntentSender
 import android.graphics.Color
+import android.location.Geocoder
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,6 +13,8 @@ import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
 import com.firebase.geofire.GeoQuery
 import com.firebase.geofire.GeoQueryEventListener
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -25,6 +29,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
 import com.google.gson.Gson
+import com.google.maps.android.data.kml.KmlLayer
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -49,8 +54,11 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
 
     private lateinit var myCity: DatabaseReference
     private lateinit var lastLocation: Location
-    private var geoQuery: GeoQuery? = null
-    private lateinit var geoFire: GeoFire
+    private  var geoQuery: GeoQuery? = null
+    private lateinit var  geoFire: GeoFire
+    private var layer: KmlLayer? = null
+    //private var geoCoder: Geocoder = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,11 +115,11 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
     private fun addQuizzesToFirebase() {
         quizzArea = ArrayList()
         //Home
-        quizzArea.add(LatLng(41.644849, -0.899591))
-        //USJ
-        quizzArea.add(LatLng(41.757400, -0.831999))
-        quizzArea.add(LatLng(41.756963, -0.832471))
-        quizzArea.add(LatLng(41.756308, -0.832450))
+        quizzArea.add(LatLng(41.757400, -0.831999)) // Salud
+        quizzArea.add(LatLng(41.662501, -0.863960))
+
+        quizzArea.add(LatLng(41.756963, -0.832471)) // Rectorado
+        quizzArea.add(LatLng(41.756308 , -0.832450)) // Comunicación
 
         //Submit this list to Firebase
         FirebaseDatabase.getInstance().getReference("usjquiz").child("Mycity").setValue(quizzArea)
@@ -190,9 +198,11 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
     private fun buildLocationRequest() {
         locationRequest = LocationRequest()
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        locationRequest.interval = 5000
-        locationRequest.fastestInterval = 3000
-        locationRequest.smallestDisplacement = 10f
+        locationRequest.interval = 50
+        locationRequest.fastestInterval = 10
+        locationRequest.smallestDisplacement = 1f
+
+
     }
 
 
@@ -206,6 +216,7 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
             Looper.myLooper()
         )
         addCircleArea()
+        addLayer()
     }
 
     override fun onLocationLoadSuccess(latLngs: List<MyLatLng>) {
@@ -243,11 +254,14 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
                 CircleOptions().center(latLng).radius(20.0).strokeColor(Color.BLUE) //Radius in m
                     .fillColor(0x220000FF).strokeWidth(5.0f)
             )
+            //mMap!!.addCircle(CircleOptions().center(latLng).radius(20.0).strokeColor(Color.BLUE) //Radius in m
+                //.fillColor(0x220000FF).strokeWidth(5.0f))
             //Create GeoQuery when user in quizz location
             geoQuery = geoFire.queryAtLocation(
                 GeoLocation(latLng.latitude, latLng.longitude),
                 0.2
             ) // 0.5 = 500m
+            geoQuery = geoFire.queryAtLocation(GeoLocation(latLng.latitude, latLng.longitude), 0.02) // 0.02 = 20m
             geoQuery!!.addGeoQueryEventListener(this@Activity2GPS)
         }
     }
@@ -283,15 +297,25 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
         ).show()
     }
 
-    fun coordinateDistance(ubucation: GeoLocation, area: LatLng): Double {
-        return 1.0
+    fun coordinateDistance(location: GeoLocation, area: LatLng): Double{
+
+        val earthRadiusKm: Double = 6372.8
+        val dLat = Math.toRadians(location!!.latitude - area.latitude)
+        val dLon = Math.toRadians(location.longitude - area.longitude)
+        val userLat = Math.toRadians(area.latitude)
+        val areaLat = Math.toRadians(location.latitude)
+
+        val a = Math.pow(Math.sin(dLat / 2), 2.toDouble()) + Math.pow(Math.sin(dLon / 2), 2.toDouble()) * Math.cos(userLat) * Math.cos(areaLat)
+        val c = 2 * Math.asin(Math.sqrt(a))
+        return earthRadiusKm * c
     }
 
     override fun onKeyMoved(key: String?, location: GeoLocation?) {
+
     }
 
     override fun onKeyExited(key: String?) {
-        Toast.makeText(this, "You went out the quizz building", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "You went out from the quizz building", Toast.LENGTH_SHORT).show()
     }
 
     override fun onGeoQueryError(error: DatabaseError?) {
@@ -301,5 +325,10 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
     override fun onStop() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
         super.onStop()
+    }
+
+    fun addLayer(){
+        layer = KmlLayer(mMap, R.raw.usj_quiz, this)
+        layer!!.addLayerToMap()
     }
 }
