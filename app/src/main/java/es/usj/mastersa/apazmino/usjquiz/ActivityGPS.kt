@@ -30,12 +30,9 @@ class ActivityGPS : AppCompatActivity(), OnMapReadyCallback, PermissionListener 
         const val REQUEST_CHECK_SETTINGS = 43
     }
 
-
-
     private lateinit var mMap: GoogleMap
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var layer: KmlLayer? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +45,6 @@ class ActivityGPS : AppCompatActivity(), OnMapReadyCallback, PermissionListener 
         //To fetch the user´s current location or last known location
         fusedLocationProviderClient = FusedLocationProviderClient(this)
         getCurrentLocation()
-
     }
 
     fun addLayer(){
@@ -56,7 +52,6 @@ class ActivityGPS : AppCompatActivity(), OnMapReadyCallback, PermissionListener 
         layer!!.addLayerToMap()
         //val container = layer!!.containers.iterator().next()
     }
-
 
     //To make the activity know, when the map is ready
     override fun onMapReady(googleMap: GoogleMap) {
@@ -133,6 +128,7 @@ class ActivityGPS : AppCompatActivity(), OnMapReadyCallback, PermissionListener 
         token: PermissionToken?
     ) {
     }
+
     override fun onPermissionDenied(response: PermissionDeniedResponse?) {
     }
 }

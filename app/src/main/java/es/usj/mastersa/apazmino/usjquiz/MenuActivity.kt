@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.google.gson.Gson
+import es.usj.mastersa.apazmino.usjquiz.Premios.DetallePremio
 import es.usj.mastersa.apazmino.usjquiz.Quiz.QuizActivity
 import es.usj.mastersa.apazmino.usjquiz.clases.Quiz
+import es.usj.mastersa.apazmino.usjquiz.clases.Zona
 import kotlinx.android.synthetic.main.activity_menu.*
 import java.io.IOException
 import java.io.InputStream
@@ -17,21 +19,23 @@ class MenuActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_menu)
 
-        button.setOnClickListener {
-            val intent = Intent(this, ActivityGPS::class.java)
+        btnIniciarQuiz.setOnClickListener {
+            val intent = Intent(this, Activity2GPS::class.java)
             startActivity(intent)
         }
 
-        btnCuestionario.setOnClickListener {
+        btnPremios.setOnClickListener {
+            val intent = Intent(this, DetallePremio::class.java)
+            startActivity(intent)
+        }
 
-            //Borrar luego desde aquí
+        btnTutorial.setOnClickListener{
             var json: String? = null
             try {
-                val inputStream: InputStream = assets.open("quiz.json")
+                val inputStream: InputStream = assets.open("quiztutorial.json")
                 json = inputStream.bufferedReader().use { it.readText() }
                 val gson = Gson()
-                val quiz = gson.fromJson(json, Quiz::class.java)
-                val zona = quiz.getZona(2)
+                val zona = gson.fromJson(json, Zona::class.java)
 
                 val intent = Intent(this, QuizActivity::class.java)
                 intent.putExtra("jsonZonaPreguntas", gson.toJson(zona))
@@ -40,9 +44,8 @@ class MenuActivity : AppCompatActivity() {
             } catch (e: IOException) {
                 Toast.makeText(this, "Error al cargar el JSON", Toast.LENGTH_LONG).show()
             }
-            //Borrar hasta aquí
-
         }
+
     }
 
 }

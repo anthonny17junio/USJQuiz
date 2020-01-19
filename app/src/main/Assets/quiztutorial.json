@@ -1,0 +1,70 @@
+{
+  "id": -1,
+  "nombre": "Quiz de ejemplo",
+  "descripcion": "Este es un ejemplo de como realizar los futuros Quizes, por cada pregunta se pueden conseguir 10 puntos, cada fallo resta 2 puntos a la puntuación final. Desliza a la derecha para empezar. Suerte!",
+  "preguntas": [
+    {
+      "pregunta": "Mi tía Cuca tiene una mala racha, ¿quién será esta muchacha?",
+      "respuestas": [
+        {
+          "respuesta": "Ratón",
+          "correcto": false
+        },
+        {
+          "respuesta": "Araña",
+          "correcto": false
+        },
+        {
+          "respuesta": "Cucaracha",
+          "correcto": true
+        },
+        {
+          "respuesta": "Murciélago",
+          "correcto": false
+        }
+      ]
+    },
+    {
+      "pregunta": "En lo alto vive, en lo alto mora, en lo alto teje la tejedora.",
+      "respuestas": [
+        {
+          "respuesta": "Araña",
+          "correcto": true
+        },
+        {
+          "respuesta": "Codorniz",
+          "correcto": false
+        },
+        {
+          "respuesta": "Águila",
+          "correcto": false
+        },
+        {
+          "respuesta": "Serpiente",
+          "correcto": false
+        }
+      ]
+    },
+    {
+      "pregunta": "Somos más de una y salimos con la luna; si te pones a contarnos te dejarás más de una.",
+      "respuestas": [
+        {
+          "respuesta": "Piedras",
+          "correcto": false
+        },
+        {
+          "respuesta": "Estrellas",
+          "correcto": true
+        },
+        {
+          "respuesta": "Arena",
+          "correcto": false
+        },
+        {
+          "respuesta": "Nubes",
+          "correcto": false
+        }
+      ]
+    }
+  ]
+}

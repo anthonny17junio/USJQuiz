@@ -4,35 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MenuActivity">
+    tools:context=".Quiz.InicioQuizFragment">
 
-    <Button
-        android:id="@+id/btnIniciarQuiz"
+    <TextView
+        android:id="@+id/txtTituloQuiz"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Iniciar Quiz"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btnPremios"
+    <TextView
+        android:id="@+id/txtDescripcionQuiz"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Premios"
+        android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnIniciarQuiz" />
+        app:layout_constraintTop_toBottomOf="@+id/txtTituloQuiz" />
 
-    <Button
-        android:id="@+id/btnTutorial"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Tutorial"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnPremios" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,8 @@
 package es.usj.mastersa.apazmino.usjquiz
 
 import android.Manifest
+import android.content.DialogInterface
+import android.content.Intent
 import android.content.IntentSender
 import android.graphics.Color
 import android.location.Geocoder
@@ -8,7 +10,9 @@ import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
+import android.preference.PreferenceManager
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
 import com.firebase.geofire.GeoQuery
@@ -36,6 +40,7 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import es.usj.mastersa.apazmino.usjquiz.Quiz.QuizActivity
 import es.usj.mastersa.apazmino.usjquiz.clases.Quiz
 import java.io.IOException
 import java.io.InputStream
@@ -54,8 +59,8 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
 
     private lateinit var myCity: DatabaseReference
     private lateinit var lastLocation: Location
-    private  var geoQuery: GeoQuery? = null
-    private lateinit var  geoFire: GeoFire
+    private var geoQuery: GeoQuery? = null
+    private lateinit var geoFire: GeoFire
     private var layer: KmlLayer? = null
     //private var geoCoder: Geocoder = null
 
@@ -94,23 +99,8 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
                 }
 
             }).check()
-//        cargarCuestionario(2)
     }
 
-//    private fun cargarCuestionario(id: Int) {
-//        var json : String ?= null
-//        try {
-//            val inputStream: InputStream = assets.open("quiz.json")
-//            json = inputStream.bufferedReader().use { it.readText() }
-//            val gson = Gson()
-//            val quiz = gson.fromJson(json, Quiz::class.java)
-//            val zona = quiz.getZona(id)
-//            Toast.makeText(this, gson.toJson(zona), Toast.LENGTH_LONG).show()
-//        }catch (e:IOException){
-//            Toast.makeText(this, "Error al cargar el JSON", Toast.LENGTH_LONG).show()
-//        }
-//
-//    }
 
     private fun addQuizzesToFirebase() {
         quizzArea = ArrayList()
@@ -119,13 +109,12 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
         quizzArea.add(LatLng(41.662501, -0.863960))
 
         quizzArea.add(LatLng(41.756963, -0.832471)) // Rectorado
-        quizzArea.add(LatLng(41.756308 , -0.832450)) // Comunicación
+        quizzArea.add(LatLng(41.756308, -0.832450)) // Comunicación
 
         //Submit this list to Firebase
         FirebaseDatabase.getInstance().getReference("usjquiz").child("Mycity").setValue(quizzArea)
             .addOnCompleteListener(object : OnCompleteListener<Void> {
                 override fun onComplete(p0: Task<Void>) {
-                    //Toast.makeText(this@Activity2GPS,"Updated", Toast.LENGTH_SHORT).show()
                 }
 
 
@@ -201,8 +190,6 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
         locationRequest.interval = 50
         locationRequest.fastestInterval = 10
         locationRequest.smallestDisplacement = 1f
-
-
     }
 
 
@@ -255,13 +242,16 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
                     .fillColor(0x220000FF).strokeWidth(5.0f)
             )
             //mMap!!.addCircle(CircleOptions().center(latLng).radius(20.0).strokeColor(Color.BLUE) //Radius in m
-                //.fillColor(0x220000FF).strokeWidth(5.0f))
+            //.fillColor(0x220000FF).strokeWidth(5.0f))
             //Create GeoQuery when user in quizz location
             geoQuery = geoFire.queryAtLocation(
                 GeoLocation(latLng.latitude, latLng.longitude),
                 0.2
             ) // 0.5 = 500m
-            geoQuery = geoFire.queryAtLocation(GeoLocation(latLng.latitude, latLng.longitude), 0.02) // 0.02 = 20m
+            geoQuery = geoFire.queryAtLocation(
+                GeoLocation(latLng.latitude, latLng.longitude),
+                1.02
+            ) // 0.02 = 20m
             geoQuery!!.addGeoQueryEventListener(this@Activity2GPS)
         }
     }
@@ -276,7 +266,7 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
 
     override fun onKeyEntered(key: String?, location: GeoLocation?) {
         var count = 0
-        var idMenor = 0
+        var idZona = 0
         var distanciaMenor: Double = 0.0
         quizzArea.forEach {
             if (count == 0) {
@@ -285,19 +275,58 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
                 val distancia = coordinateDistance(location!!, it)
                 if (distancia < distanciaMenor) {
                     distanciaMenor = distancia
-                    idMenor = count
+                    idZona = count
                 }
             }
             count++
         }
-        Toast.makeText(
-            this,
-            "Entraste a la zona " + idMenor,
-            Toast.LENGTH_SHORT
-        ).show()
+
+        if (quizRealizado(idZona)) { //Si ya ha realizado el quiz
+            mostrarYesNoDialog(idZona) //Pregunta si desea realizar nuevamente el quiz
+        } else {
+            iniciarQuiz(idZona) //Si no ha realizado el Quiz lo lanza directamente
+        }
     }
 
-    fun coordinateDistance(location: GeoLocation, area: LatLng): Double{
+    fun quizRealizado(idZona: Int): Boolean {
+        //Obtenemos el PreferenceManager
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val keyZona = "PUNT" + idZona
+        val puntuacionZona = prefs.getInt(keyZona, -1)
+        return puntuacionZona > -1
+    }
+
+    fun mostrarYesNoDialog(idZona: Int) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Zona ya visitada")
+        builder.setMessage("¿Deseas repetir el Quiz?")
+        builder.setPositiveButton("Si", { dialogInterface: DialogInterface, i: Int ->
+            iniciarQuiz(idZona)
+        })
+
+        builder.setNegativeButton("No", { dialogInterface: DialogInterface, i: Int -> })
+        builder.show()
+    }
+
+    fun iniciarQuiz(idZona: Int) {
+        var json: String? = null
+        try {
+            val inputStream: InputStream = assets.open("quiz.json")
+            json = inputStream.bufferedReader().use { it.readText() }
+            val gson = Gson()
+            val quiz = gson.fromJson(json, Quiz::class.java)
+            val zona = quiz.getZona(idZona)
+
+            val intent = Intent(this, QuizActivity::class.java)
+            intent.putExtra("jsonZonaPreguntas", gson.toJson(zona))
+            startActivity(intent)
+
+        } catch (e: IOException) {
+            Toast.makeText(this, "Error al cargar el JSON", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    fun coordinateDistance(location: GeoLocation, area: LatLng): Double {
 
         val earthRadiusKm: Double = 6372.8
         val dLat = Math.toRadians(location!!.latitude - area.latitude)
@@ -305,7 +334,10 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
         val userLat = Math.toRadians(area.latitude)
         val areaLat = Math.toRadians(location.latitude)
 
-        val a = Math.pow(Math.sin(dLat / 2), 2.toDouble()) + Math.pow(Math.sin(dLon / 2), 2.toDouble()) * Math.cos(userLat) * Math.cos(areaLat)
+        val a = Math.pow(Math.sin(dLat / 2), 2.toDouble()) + Math.pow(
+            Math.sin(dLon / 2),
+            2.toDouble()
+        ) * Math.cos(userLat) * Math.cos(areaLat)
         val c = 2 * Math.asin(Math.sqrt(a))
         return earthRadiusKm * c
     }
@@ -327,7 +359,7 @@ class Activity2GPS : AppCompatActivity(), OnMapReadyCallback, IOnLoadLocationLis
         super.onStop()
     }
 
-    fun addLayer(){
+    fun addLayer() {
         layer = KmlLayer(mMap, R.raw.usj_quiz, this)
         layer!!.addLayerToMap()
     }

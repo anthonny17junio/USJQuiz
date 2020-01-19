@@ -16,10 +16,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Premios.DetallePremio"></activity>
         <activity
             android:name=".Quiz.QuizActivity"
             android:label="@string/title_activity_quiz"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -27,51 +28,22 @@
 
         <activity
             android:name=".Activity2GPS"
-            android:label="@string/title_activity_activity2_gps">
-
-            <!-- DESCOMENTAR -->
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
+            android:label="@string/title_activity_activity2_gps" />
         <activity
             android:name=".ActivityGPS"
-            android:label="ActivityGPS">
-
-            <!-- DESCOMENTAR -->
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity> <!-- DESCOMENTAR -->
-        <!-- <activity android:name=".MenuActivity" /> -->
-        <!-- BORRAR DESDE AQUÍ -->
+            android:label="ActivityGPS" />
         <activity android:name=".MenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- BORRAR HASTA AQUÍ -->
+        </activity>
         <activity
             android:name=".FullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
-            android:theme="@style/FullscreenTheme">
-
-            <!-- DESCOMENTAR -->
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
+            android:theme="@style/FullscreenTheme" />
     </application>
 
 </manifest>

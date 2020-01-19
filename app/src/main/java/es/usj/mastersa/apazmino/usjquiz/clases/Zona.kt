@@ -5,6 +5,7 @@ class Zona(id: Int, nombre: String, descripcion: String, preguntas: ArrayList<Pr
     var nombre: String = ""
     var descripcion: String = ""
     var preguntas: ArrayList<Pregunta>? = null
+    var puntuacion: Int = -1
 
     init {
         this.id = id
